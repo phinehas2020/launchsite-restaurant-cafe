@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import './styles/App.css'
 
 const navLinks = [
@@ -12,27 +12,24 @@ const navLinks = [
 const courses = [
   {
     id: 'starter',
-    label: 'Starter',
     title: 'Charred Oyster & Green Mango',
     description:
       'Live-fire oyster, preserved green mango, finger lime, and fermented chili honey.',
-    price: '$28',
+    price: '28',
   },
   {
     id: 'signature',
-    label: 'Signature',
     title: 'Dry-Aged Duck, Coal and Cherry',
     description:
       'Dry-aged duck, smoked cherry glaze, toasted farro, and wild fennel jus.',
-    price: '$64',
+    price: '64',
   },
   {
     id: 'dessert',
-    label: 'Dessert',
     title: 'Black Sesame Mille-Feuille',
     description:
       'Caramelized pastry, black sesame cream, citrus peel confit, and sea salt glass.',
-    price: '$23',
+    price: '23',
   },
 ]
 
@@ -82,15 +79,9 @@ const galleryImages = [
 ]
 
 function App() {
-  const [activeCourseId, setActiveCourseId] = useState(courses[0].id)
   const [requestSent, setRequestSent] = useState(false)
 
-  const activeCourse = useMemo(
-    () => courses.find((course) => course.id === activeCourseId) ?? courses[0],
-    [activeCourseId],
-  )
-
-  const reservationMinDate = useMemo(() => new Date().toISOString().split('T')[0], [])
+  const reservationMinDate = new Date().toISOString().split('T')[0]
 
   const handleReservationSubmit = (event) => {
     event.preventDefault()
@@ -125,108 +116,73 @@ function App() {
       </header>
 
       <main id="content">
-        <section className="hero shell" id="top">
-          <div className="hero-copy">
-            <p className="kicker">Lower Manhattan · Open Fire Kitchen</p>
-            <h1>A dining room with a pulse.</h1>
-            <p className="lede">
-              We built Noir & Nectar around rhythm, smoke, and hospitality with emotional range.
-              The room stays intimate. The flavors do not.
-            </p>
-            <div className="hero-actions">
-              <a className="button button-primary" href="#book">
-                Book A Table
-              </a>
-              <a className="button button-outline" href="#dishes">
-                Explore Menu
-              </a>
-            </div>
-          </div>
-
+        {/* HERO: dramatic, oversized, image-dominant */}
+        <section className="hero" id="top">
           <figure className="hero-figure">
             <img
               alt="Chef preparing a dish over open flame"
               fetchPriority="high"
               src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&w=1800&q=80"
             />
-            <figcaption>
-              Tonight&apos;s pass: ember-roasted langoustine, chili butter, fermented citrus.
-            </figcaption>
           </figure>
+          <div className="hero-copy shell">
+            <h1>
+              Noir<br />
+              <span className="hero-ampersand">&</span><br />
+              Nectar
+            </h1>
+            <p className="lede">
+              Open fire kitchen. Lower Manhattan.<br />
+              Intimate room. Unrestrained flavor.
+            </p>
+            <div className="hero-actions">
+              <a className="button button-primary" href="#book">
+                Book A Table
+              </a>
+            </div>
+          </div>
         </section>
 
-        <section className="manifesto shell" id="manifesto">
-          <div className="section-title">
-            <p className="kicker">Manifesto</p>
+        {/* MANIFESTO: single flowing text, narrowed, intimate */}
+        <section className="manifesto" id="manifesto">
+          <div className="shell manifesto-inner">
             <h2>Precision over spectacle.</h2>
-          </div>
-
-          <div className="manifesto-grid">
-            <p>
-              Our menu is seasonal and specific to the week. We source from a small network of
-              growers, fishers, and butchers whose work can stand on its own.
-            </p>
-            <p>
-              We keep the room at low light, the music analog, and the service informed without
-              performance. You come here for focus, not noise.
-            </p>
+            <div className="manifesto-body">
+              <p>
+                Our menu is seasonal and specific to the week. We source from a small network of
+                growers, fishers, and butchers whose work can stand on its own.
+              </p>
+              <p>
+                We keep the room at low light, the music analog, and the service informed without
+                performance. You come here for focus, not noise.
+              </p>
+            </div>
           </div>
         </section>
 
-        <section className="dishes shell" id="dishes">
-          <div className="section-title">
-            <p className="kicker">Featured Courses</p>
-            <h2>Three signatures this week.</h2>
-          </div>
+        {/* DISHES: course labels, signature emphasis, no hr dividers */}
+        <section className="dishes" id="dishes">
+          <div className="shell">
+            <h2 className="dishes-display">MENU</h2>
+            <p className="dishes-subtitle">Three signatures this week</p>
 
-          <div className="course-layout">
-            <div className="course-tabs" role="tablist" aria-label="Featured courses">
+            <div className="menu-list">
               {courses.map((course) => (
-                <button
-                  key={course.id}
-                  aria-selected={activeCourse.id === course.id}
-                  className={activeCourse.id === course.id ? 'course-tab active' : 'course-tab'}
-                  onClick={() => setActiveCourseId(course.id)}
-                  role="tab"
-                  type="button"
-                >
-                  <span>{course.label}</span>
-                  <strong>{course.title}</strong>
-                </button>
+                <div key={course.id} className={`menu-item${course.id === 'signature' ? ' menu-item--signature' : ''}`}>
+                  <span className="menu-item-course">{course.id}</span>
+                  <div className="menu-item-header">
+                    <h3 className="menu-item-name">{course.title}</h3>
+                    <span className="menu-item-price">{course.price}</span>
+                  </div>
+                  <p className="menu-item-desc">{course.description}</p>
+                </div>
               ))}
             </div>
-
-            <article className="course-panel" role="tabpanel">
-              <p className="course-label">{activeCourse.label}</p>
-              <h3>{activeCourse.title}</h3>
-              <p>{activeCourse.description}</p>
-              <div className="course-price">{activeCourse.price}</div>
-            </article>
           </div>
         </section>
 
-        <section className="cellar shell" id="cellar">
-          <div className="section-title">
-            <p className="kicker">Cellar</p>
-            <h2>Flights built for structure and contrast.</h2>
-          </div>
-
-          <div className="cellar-list">
-            {cellarFlights.map((flight) => (
-              <article key={flight.title} className="cellar-item">
-                <h3>{flight.title}</h3>
-                <p>{flight.notes}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="gallery shell" id="salon">
-          <div className="section-title">
-            <p className="kicker">The Salon</p>
-            <h2>Materials, flame, and shadow.</h2>
-          </div>
-
+        {/* GALLERY: full-bleed, varied sizes */}
+        <section className="gallery" id="salon">
           <div className="gallery-grid">
             {galleryImages.map((image, imageIndex) => (
               <figure key={image.src} className={`gallery-item gallery-item-${imageIndex + 1}`}>
@@ -236,61 +192,95 @@ function App() {
           </div>
         </section>
 
-        <section className="voices shell">
-          <div className="section-title">
-            <p className="kicker">Guest Notes</p>
-            <h2>People remember the atmosphere first.</h2>
-          </div>
+        {/* CELLAR: horizontal triptych, not vertical list */}
+        <section className="cellar" id="cellar">
+          <div className="shell">
+            <h2 className="cellar-heading">Cellar</h2>
+            <p className="cellar-subtitle">Flights built for structure and contrast</p>
 
-          <div className="voice-grid">
-            {testimonials.map((testimonial) => (
-              <article key={testimonial.author} className="voice-card">
-                <p>“{testimonial.quote}”</p>
-                <footer>
-                  <strong>{testimonial.author}</strong>
-                  <span>{testimonial.role}</span>
-                </footer>
-              </article>
-            ))}
+            <div className="cellar-triptych">
+              {cellarFlights.map((flight) => (
+                <div key={flight.title} className="cellar-flight">
+                  <h3>{flight.title}</h3>
+                  <p>{flight.notes}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
-        <section className="booking shell" id="book">
-          <div className="section-title">
-            <p className="kicker">Reservations</p>
-            <h2>Tell us when to expect you.</h2>
+        {/* VOICES: centered featured quote, ornament instead of hr */}
+        <section className="voices">
+          <div className="shell voices-inner">
+            <div className="voice-featured">
+              <blockquote>
+                <p>&ldquo;{testimonials[0].quote}&rdquo;</p>
+              </blockquote>
+              <cite>
+                {testimonials[0].author}<span>, {testimonials[0].role}</span>
+              </cite>
+            </div>
+
+            <div className="voice-ornament" aria-hidden="true"></div>
+
+            <div className="voice-secondary">
+              <blockquote>
+                <p>&ldquo;{testimonials[1].quote}&rdquo;</p>
+              </blockquote>
+              <cite>
+                {testimonials[1].author}<span>, {testimonials[1].role}</span>
+              </cite>
+            </div>
           </div>
+        </section>
 
-          <form className="booking-form" onSubmit={handleReservationSubmit}>
-            <label htmlFor="name">Name</label>
-            <input id="name" name="name" required type="text" />
+        {/* BOOKING: underline inputs, intimate form */}
+        <section className="booking" id="book">
+          <div className="shell booking-inner">
+            <div className="booking-heading-area">
+              <h2 className="booking-display">RESERVE</h2>
+              <p className="booking-subtitle">Tell us when to expect you.</p>
+            </div>
 
-            <label htmlFor="email">Email</label>
-            <input id="email" name="email" required type="email" />
+            <form className="booking-form" onSubmit={handleReservationSubmit}>
+              <div className="form-field">
+                <label htmlFor="name">Name</label>
+                <input id="name" name="name" required type="text" />
+              </div>
 
-            <label htmlFor="date">Date</label>
-            <input id="date" min={reservationMinDate} name="date" required type="date" />
+              <div className="form-field">
+                <label htmlFor="email">Email</label>
+                <input id="email" name="email" required type="email" />
+              </div>
 
-            <label htmlFor="party">Party Size</label>
-            <select defaultValue="" id="party" name="party" required>
-              <option disabled value="">
-                Select party size
-              </option>
-              <option value="2">2 guests</option>
-              <option value="3">3 guests</option>
-              <option value="4">4 guests</option>
-              <option value="5">5 guests</option>
-              <option value="6+">6+ guests</option>
-            </select>
+              <div className="form-field">
+                <label htmlFor="date">Date</label>
+                <input id="date" min={reservationMinDate} name="date" required type="date" />
+              </div>
 
-            <button className="button button-primary" type="submit">
-              Send Request
-            </button>
+              <div className="form-field">
+                <label htmlFor="party">Party Size</label>
+                <select defaultValue="" id="party" name="party" required>
+                  <option disabled value="">
+                    Select party size
+                  </option>
+                  <option value="2">2 guests</option>
+                  <option value="3">3 guests</option>
+                  <option value="4">4 guests</option>
+                  <option value="5">5 guests</option>
+                  <option value="6+">6+ guests</option>
+                </select>
+              </div>
 
-            {requestSent ? (
-              <p className="booking-confirmation">Request received. Our team replies within one hour.</p>
-            ) : null}
-          </form>
+              <button className="button button-primary" type="submit">
+                Send Request
+              </button>
+
+              {requestSent ? (
+                <p className="booking-confirmation">Request received. Our team replies within one hour.</p>
+              ) : null}
+            </form>
+          </div>
         </section>
       </main>
 
@@ -300,7 +290,7 @@ function App() {
             <a className="wordmark" href="#top">
               NOIR <span>&</span> NECTAR
             </a>
-            <p>123 Velvet Avenue · New York, NY</p>
+            <p>123 Velvet Avenue, New York, NY</p>
           </div>
 
           <div className="footer-links">
