@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">Noir &amp; Nectar Monogram</title>
+  <desc id="desc">Gold N monogram on deep midnight background.</desc>
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e2c597" />
+      <stop offset="100%" stop-color="#c3975f" />
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="28" fill="#09090d" />
+  <path d="M34 94V34h15.2l29.6 38.1V34H94v60H79.2L49.2 56.4V94H34Z" fill="url(#gold)" />
+</svg>
