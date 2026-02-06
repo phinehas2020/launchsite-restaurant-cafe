@@ -170,18 +170,20 @@ function App() {
               {courses.map((course) => (
                 <div key={course.id} className={`menu-item${course.id === 'signature' ? ' menu-item--signature' : ''}`}>
                   <span className="menu-item-course">{course.id}</span>
-                  <div className="menu-item-header">
+
+                  <div className="menu-item-content">
                     <h3 className="menu-item-name">{course.title}</h3>
-                    <span className="menu-item-price">{course.price}</span>
+                    <p className="menu-item-desc">{course.description}</p>
                   </div>
-                  <p className="menu-item-desc">{course.description}</p>
+
+                  <span className="menu-item-price">${course.price}</span>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* GALLERY: full-bleed, varied sizes */}
+        {/* GALLERY: simple horizontal scroll now */}
         <section className="gallery" id="salon">
           <div className="gallery-grid">
             {galleryImages.map((image, imageIndex) => (
@@ -192,12 +194,10 @@ function App() {
           </div>
         </section>
 
-        {/* CELLAR: horizontal triptych, not vertical list */}
+        {/* CELLAR */}
         <section className="cellar" id="cellar">
           <div className="shell">
-            <h2 className="cellar-heading">Cellar</h2>
-            <p className="cellar-subtitle">Flights built for structure and contrast</p>
-
+            <h2 className="cellar-heading">The Cellar</h2>
             <div className="cellar-triptych">
               {cellarFlights.map((flight) => (
                 <div key={flight.title} className="cellar-flight">
@@ -209,7 +209,7 @@ function App() {
           </div>
         </section>
 
-        {/* VOICES: centered featured quote, ornament instead of hr */}
+        {/* VOICES */}
         <section className="voices">
           <div className="shell voices-inner">
             <div className="voice-featured">
@@ -217,52 +217,50 @@ function App() {
                 <p>&ldquo;{testimonials[0].quote}&rdquo;</p>
               </blockquote>
               <cite>
-                {testimonials[0].author}<span>, {testimonials[0].role}</span>
+                {testimonials[0].author} — {testimonials[0].role}
               </cite>
             </div>
 
-            <div className="voice-ornament" aria-hidden="true"></div>
+            <div className="voice-ornament" aria-hidden="true">✦</div>
 
             <div className="voice-secondary">
               <blockquote>
                 <p>&ldquo;{testimonials[1].quote}&rdquo;</p>
               </blockquote>
               <cite>
-                {testimonials[1].author}<span>, {testimonials[1].role}</span>
+                {testimonials[1].author} — {testimonials[1].role}
               </cite>
             </div>
           </div>
         </section>
 
-        {/* BOOKING: underline inputs, intimate form */}
+        {/* BOOKING */}
         <section className="booking" id="book">
           <div className="shell booking-inner">
             <div className="booking-heading-area">
-              <h2 className="booking-display">RESERVE</h2>
-              <p className="booking-subtitle">Tell us when to expect you.</p>
+              <h2 className="booking-display">Reserve</h2>
             </div>
 
             <form className="booking-form" onSubmit={handleReservationSubmit}>
               <div className="form-field">
-                <label htmlFor="name">Name</label>
-                <input id="name" name="name" required type="text" />
+                <input id="name" name="name" placeholder=" " required type="text" />
+                <label htmlFor="name">Full Name</label>
               </div>
 
               <div className="form-field">
-                <label htmlFor="email">Email</label>
-                <input id="email" name="email" required type="email" />
+                <input id="email" name="email" placeholder=" " required type="email" />
+                <label htmlFor="email">Email Address</label>
               </div>
 
               <div className="form-field">
-                <label htmlFor="date">Date</label>
                 <input id="date" min={reservationMinDate} name="date" required type="date" />
+                <label htmlFor="date" style={{ display: 'none' }}>Date</label>
               </div>
 
               <div className="form-field">
-                <label htmlFor="party">Party Size</label>
                 <select defaultValue="" id="party" name="party" required>
                   <option disabled value="">
-                    Select party size
+                    Party Size
                   </option>
                   <option value="2">2 guests</option>
                   <option value="3">3 guests</option>
@@ -273,11 +271,11 @@ function App() {
               </div>
 
               <button className="button button-primary" type="submit">
-                Send Request
+                Request Table
               </button>
 
               {requestSent ? (
-                <p className="booking-confirmation">Request received. Our team replies within one hour.</p>
+                <p className="booking-confirmation">Request received. We will confirm shortly.</p>
               ) : null}
             </form>
           </div>

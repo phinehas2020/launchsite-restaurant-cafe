@@ -1,29 +1,48 @@
 /* ═══════════════════════════════════════════════
-   PAGE SHELL & UTILITIES
+   ANIMATIONS & UTILITIES
    ═══════════════════════════════════════════════ */
 
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes reveal {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
 .page {
-  background: #09090c;
-}
-
-.skip-link {
-  position: fixed;
-  left: 1rem;
-  top: 1rem;
-  padding: 0.5rem 0.8rem;
-  background: #141319;
-  border: 1px solid var(--line-strong);
-  transform: translateY(-220%);
-  transition: transform var(--ease);
-  z-index: 1000;
-}
-
-.skip-link:focus-visible {
-  transform: translateY(0);
+  position: relative;
+  overflow-x: hidden;
 }
 
 .shell {
-  width: min(72rem, calc(100% - 2rem));
+  width: min(85rem, calc(100% - 3rem));
   margin-inline: auto;
 }
 
@@ -32,659 +51,654 @@
    ═══════════════════════════════════════════════ */
 
 .header {
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 40;
-  border-bottom: 1px solid var(--line-soft);
-  background: #0e0d11;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  transition: transform 0.4s var(--ease-out), background 0.4s ease;
+  padding-block: 1.5rem;
 }
 
+.header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 10, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  mask: linear-gradient(to bottom, black 50%, transparent);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.header:has(.header-shell) {
+  /* Trigger background on scroll if we added JS toggle, simpler for now: */
+  background: transparent;
+}
+
+/* We'll add a class via JS for scrolled state later if needed, 
+   but for now let's make it always elegant */
+
 .header-shell {
-  min-height: 4.65rem;
-  display: grid;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  grid-template-columns: auto 1fr auto;
-  gap: 1rem;
 }
 
 .wordmark {
   font-family: var(--font-display);
-  letter-spacing: 0.06em;
-  font-size: clamp(1rem, 2.2vw, 1.45rem);
+  font-size: 1.5rem;
   font-weight: 600;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--text);
+  position: relative;
+  z-index: 2;
+  mix-blend-mode: exclusion;
+  /* Cool effect over white images */
 }
 
 .wordmark span {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
   color: var(--accent);
+  margin-inline: 0.1em;
 }
 
 .nav-desktop {
-  justify-self: center;
   display: flex;
-  align-items: center;
-  gap: clamp(0.8rem, 1.8vw, 1.5rem);
+  gap: 3rem;
+  background: rgba(20, 20, 20, 0.5);
+  padding: 0.75rem 2rem;
+  border-radius: 99px;
+  border: 1px solid var(--line-soft);
+  backdrop-filter: blur(8px);
 }
 
 .nav-desktop a {
-  font-size: 0.73rem;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
   text-transform: uppercase;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.15em;
   color: var(--text-muted);
-  transition: color var(--ease);
+  position: relative;
 }
 
-.nav-desktop a:hover,
-.nav-desktop a:focus-visible {
+.nav-desktop a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  transition: all 0.3s var(--ease-out);
+  transform: translateX(-50%);
+}
+
+.nav-desktop a:hover {
   color: var(--text);
 }
 
+.nav-desktop a:hover::after {
+  width: 100%;
+}
+
 .header-book {
-  border: 1px solid var(--line-strong);
-  border-radius: 6px;
-  padding: 0.55rem 0.92rem;
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-}
-
-.header-book:hover,
-.header-book:focus-visible {
-  border-color: var(--accent);
-}
-
-/* ═══════════════════════════════════════════════
-   SHARED BUTTON
-   ═══════════════════════════════════════════════ */
-
-.button {
-  border: 1px solid transparent;
-  border-radius: 6px;
-  padding: 0.78rem 1.15rem;
-  font-size: 0.74rem;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
+  background: var(--text);
+  color: var(--bg);
+  padding: 0.75rem 1.75rem;
+  border-radius: 2px;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
   font-weight: 600;
-  transition: transform var(--ease), border-color var(--ease);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: transform 0.3s var(--ease-out), background 0.3s ease;
 }
 
-.button:hover,
-.button:focus-visible {
-  transform: translateY(-1px);
-}
-
-.button-primary {
+.header-book:hover {
+  transform: translateY(-2px);
   background: var(--accent);
-  color: #171208;
-}
-
-.button-primary:hover,
-.button-primary:focus-visible {
-  background: #e0bc84;
 }
 
 /* ═══════════════════════════════════════════════
-   HERO — full-bleed image with overlay text
-   Vast vertical space, image-forward, oversized type
+   HERO
    ═══════════════════════════════════════════════ */
 
 .hero {
   position: relative;
-  min-height: 100vh;
-  min-height: 100dvh;
-  display: flex;
-  align-items: flex-end;
-  overflow: clip;
+  height: 100dvh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
 }
 
 .hero-figure {
   position: absolute;
   inset: 0;
-  margin: 0;
+  z-index: 0;
 }
 
 .hero-figure img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  opacity: 0.6;
+  filter: contrast(1.1) saturate(0.9);
+  transform: scale(1.05);
+  /* Slight zoom for parallax feel to start */
+  animation: heroZoom 20s infinite alternate ease-in-out;
 }
 
-/* dark vignette over hero image for text readability */
+@keyframes heroZoom {
+  from {
+    transform: scale(1.05);
+  }
+
+  to {
+    transform: scale(1.15);
+  }
+}
+
 .hero-figure::after {
   content: '';
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(to top, #09090c 0%, rgba(9,9,12,0.85) 30%, rgba(9,9,12,0.25) 70%, rgba(9,9,12,0.4) 100%);
+  background: linear-gradient(to bottom,
+      rgba(10, 10, 10, 0.3) 0%,
+      rgba(10, 10, 10, 0.0) 40%,
+      rgba(10, 10, 10, 0.8) 100%);
 }
 
 .hero-copy {
   position: relative;
-  z-index: 2;
-  padding-bottom: clamp(3.5rem, 8vw, 6.5rem);
-  padding-top: 40vh;
+  z-index: 10;
+  text-align: center;
+  mix-blend-mode: normal;
 }
 
 .hero h1 {
-  font-size: clamp(4rem, 13vw, 11rem);
-  line-height: 0.88;
-  font-weight: 400;
-  font-family: var(--font-display);
+  font-size: clamp(4rem, 15vw, 12rem);
+  line-height: 0.8;
+  letter-spacing: -0.04em;
+  color: #e6e4dc;
+  text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  animation: fadeUp 1.2s var(--ease-out) forwards;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .hero-ampersand {
-  color: var(--accent);
-  display: inline-block;
+  font-family: var(--font-display);
   font-style: italic;
-  font-size: 0.65em;
-  margin-inline: 0.05em;
+  font-size: 0.4em;
+  color: var(--accent);
+  margin-block: 0.2em;
+  opacity: 0;
+  animation: fadeUp 1.2s var(--ease-out) 0.3s forwards;
 }
 
 .lede {
-  margin-top: 1.5rem;
-  color: var(--text-muted);
-  font-size: clamp(0.95rem, 1.6vw, 1.15rem);
-  line-height: 1.55;
-  max-width: 32ch;
+  margin-top: 2rem;
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  color: rgba(255, 255, 255, 0.8);
+  max-width: 40ch;
+  margin-inline: auto;
+  opacity: 0;
+  animation: fadeUp 1.2s var(--ease-out) 0.6s forwards;
 }
 
 .hero-actions {
-  margin-top: 2rem;
+  margin-top: 3rem;
+  opacity: 0;
+  animation: fadeUp 1.2s var(--ease-out) 0.8s forwards;
 }
 
+.button-primary {
+  display: inline-block;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 1rem 2.5rem;
+  border-radius: 99px;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  transition: all 0.3s ease;
+  color: var(--text);
+  position: relative;
+  overflow: hidden;
+}
+
+.button-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--text);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s var(--ease-out);
+  z-index: -1;
+}
+
+.button-primary:hover {
+  color: var(--bg);
+  border-color: var(--text);
+}
+
+.button-primary:hover::before {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+
 /* ═══════════════════════════════════════════════
-   MANIFESTO — intimate, single flowing text
-   Narrowed reading column, no grid. Personal.
+   MANIFESTO
    ═══════════════════════════════════════════════ */
 
 .manifesto {
-  background: #0d0d10;
-  padding-block: clamp(3rem, 6vw, 5rem);
+  padding-block: clamp(6rem, 10vw, 10rem);
+  position: relative;
 }
 
 .manifesto-inner {
-  max-width: 38rem;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: clamp(3rem, 8vw, 8rem);
+  align-items: start;
 }
 
-.manifesto-inner h2 {
-  font-size: clamp(1.5rem, 3.8vw, 2.6rem);
-  font-family: var(--font-display);
-  font-weight: 400;
-  max-width: 20ch;
+.manifesto h2 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  line-height: 1;
+  color: var(--text);
+  padding-top: 0.5em;
+  /* Optical alignment */
+  border-top: 1px solid var(--accent);
 }
 
 .manifesto-body {
-  margin-top: 1.8rem;
+  padding-top: 4rem;
 }
 
 .manifesto-body p {
+  font-size: clamp(1rem, 1.2vw, 1.15rem);
   color: var(--text-muted);
-  font-size: clamp(0.92rem, 1.4vw, 1.05rem);
-  line-height: 1.7;
+  line-height: 1.8;
+  margin-bottom: 2rem;
 }
 
-.manifesto-body p + p {
-  margin-top: 1.2rem;
-}
-
-.manifesto-body p:first-child::first-letter {
-  font-family: var(--font-display);
-  font-size: 3.4em;
+.manifesto-body p:first-of-type::first-letter {
   float: left;
+  font-family: var(--font-display);
+  font-size: 4.5rem;
   line-height: 0.8;
-  margin-right: 0.1em;
-  margin-top: 0.05em;
+  padding-right: 0.2rem;
   color: var(--accent);
-  font-weight: 500;
 }
 
 /* ═══════════════════════════════════════════════
-   DISHES / MENU — course labels, signature emphasis
-   No hr dividers, spacing-based separation.
+   DISHES
    ═══════════════════════════════════════════════ */
 
 .dishes {
-  background: #09090c;
-  padding-block: clamp(4rem, 9vw, 9rem);
+  padding-block: 5rem;
 }
 
 .dishes-display {
-  font-family: var(--font-display);
-  font-size: clamp(4.5rem, 12vw, 10rem);
-  font-weight: 400;
-  line-height: 0.85;
-  color: var(--text);
-  letter-spacing: -0.02em;
-}
-
-.dishes-subtitle {
-  margin-top: 0.6rem;
-  color: var(--text-dim);
-  font-size: 0.82rem;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
+  display: none;
+  /* Hide generic title, let the food speak */
 }
 
 .menu-list {
-  margin-top: clamp(2rem, 4vw, 3.5rem);
-  max-width: 44rem;
+  max-width: 50rem;
+  margin-inline: auto;
+  border-top: 1px solid var(--line-strong);
 }
 
-.menu-item + .menu-item {
-  margin-top: clamp(1.8rem, 3.5vw, 2.8rem);
+.menu-item {
+  padding-block: 2.5rem;
+  border-bottom: 1px solid var(--line-soft);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 2rem;
+  align-items: center;
+  transition: background 0.3s ease;
+  position: relative;
+}
+
+.menu-item:hover {
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .menu-item-course {
-  display: block;
-  font-size: 0.62rem;
+  font-size: 0.75rem;
+  color: var(--accent);
   text-transform: uppercase;
-  letter-spacing: 0.22em;
-  color: var(--accent-muted);
-  margin-bottom: 0.35rem;
+  letter-spacing: 0.2em;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  opacity: 0.7;
 }
 
-.menu-item-header {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1.5rem;
+.menu-item-content {
+  display: block;
+  /* Stack on mobile, but flex inside content */
 }
 
 .menu-item-name {
-  font-family: var(--font-display);
-  font-size: clamp(1.2rem, 2.6vw, 1.65rem);
-  font-weight: 400;
-  line-height: 1.15;
+  font-size: 1.75rem;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+  transition: color 0.3s ease;
 }
 
-.menu-item--signature .menu-item-name {
-  font-size: clamp(1.5rem, 3.2vw, 2.1rem);
+.menu-item:hover .menu-item-name {
+  color: var(--accent);
+}
+
+.menu-item-desc {
+  color: var(--text-dim);
+  font-size: 0.95rem;
 }
 
 .menu-item-price {
   font-family: var(--font-display);
-  font-size: clamp(1rem, 2vw, 1.3rem);
+  font-size: 1.5rem;
   color: var(--text-muted);
-  flex-shrink: 0;
-  font-weight: 400;
 }
 
-.menu-item-desc {
-  margin-top: 0.35rem;
-  color: var(--text-dim);
-  font-size: 0.84rem;
-  line-height: 1.45;
-  max-width: 50ch;
+.menu-item--signature {
+  padding-block: 4rem;
 }
+
+.menu-item--signature .menu-item-name {
+  font-size: 2.5rem;
+}
+
 
 /* ═══════════════════════════════════════════════
-   GALLERY — full-bleed, no shell constraint
-   Varied image sizes, masonry-ish feel
+   GALLERY
    ═══════════════════════════════════════════════ */
 
 .gallery {
-  padding-block: 0;
+  padding-block: 8rem;
+  overflow: hidden;
 }
 
 .gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: auto auto;
-  gap: 3px;
+  display: flex;
+  gap: 2rem;
+  padding-inline: max(1rem, calc((100vw - 85rem) / 2));
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 2rem;
+  /* Scrollbar space */
+  scrollbar-width: none;
+}
+
+.gallery-grid::-webkit-scrollbar {
+  display: none;
 }
 
 .gallery-item {
-  margin: 0;
-  overflow: clip;
+  flex: 0 0 40vw;
+  /* Wide cinematic cards */
+  scroll-snap-align: center;
+  position: relative;
+  aspect-ratio: 16/9;
 }
 
 .gallery-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
+  filter: grayscale(100%);
+  transition: filter 0.5s ease;
 }
 
-.gallery-item-1 {
-  grid-column: 1 / 8;
-  grid-row: 1 / 3;
-  aspect-ratio: auto;
+.gallery-item:hover img {
+  filter: grayscale(0%);
 }
 
 .gallery-item-2 {
-  grid-column: 8 / 13;
-  grid-row: 1 / 2;
-  aspect-ratio: 1.35;
-}
-
-.gallery-item-3 {
-  grid-column: 8 / 13;
-  grid-row: 2 / 3;
-  aspect-ratio: 1.35;
+  flex: 0 0 25vw;
+  aspect-ratio: 3/4;
+  /* Portrait */
 }
 
 /* ═══════════════════════════════════════════════
-   CELLAR — horizontal triptych, generous space
-   Three flights side by side with ruled tops.
-   Structurally distinct from the vertical menu list.
+   CELLAR
    ═══════════════════════════════════════════════ */
 
 .cellar {
-  background: #111114;
-  padding-block: clamp(4rem, 8vw, 7rem);
+  background: var(--panel);
+  padding-block: clamp(6rem, 10vw, 10rem);
+  position: relative;
+}
+
+.cellar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 4rem;
+  background: var(--accent);
 }
 
 .cellar-heading {
-  font-family: var(--font-display);
-  font-size: clamp(1.3rem, 3vw, 2rem);
-  font-weight: 400;
-}
-
-.cellar-subtitle {
-  margin-top: 0.3rem;
-  color: var(--text-dim);
-  font-size: 0.82rem;
-  letter-spacing: 0.08em;
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 4rem;
+  color: var(--text-muted);
 }
 
 .cellar-triptych {
-  margin-top: clamp(2rem, 4vw, 3.5rem);
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
+  border: 1px solid var(--line-soft);
 }
 
 .cellar-flight {
-  border-top: 1px solid var(--line-soft);
-  padding-top: 1.2rem;
+  padding: 3rem 2rem;
+  border-right: 1px solid var(--line-soft);
+  text-align: center;
+  transition: background 0.3s ease;
+}
+
+.cellar-flight:last-child {
+  border-right: none;
+}
+
+.cellar-flight:hover {
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .cellar-flight h3 {
-  font-family: var(--font-display);
-  font-size: clamp(1.1rem, 2.2vw, 1.45rem);
-  font-weight: 400;
-  line-height: 1.2;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--text);
 }
 
 .cellar-flight p {
-  margin-top: 0.35rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
   color: var(--text-dim);
-  font-size: 0.84rem;
-  line-height: 1.45;
 }
 
+
 /* ═══════════════════════════════════════════════
-   VOICES — centered featured, ornament separator
-   Inscribed feel. Text-align center. No hr rule.
+   VOICES / TESTIMONIALS
    ═══════════════════════════════════════════════ */
 
 .voices {
-  background: #09090c;
-  padding-block: clamp(6rem, 12vw, 12rem);
-}
-
-.voices-inner {
-  max-width: 52rem;
+  padding-block: 10rem;
   text-align: center;
 }
 
-.voice-featured blockquote,
-.voice-secondary blockquote {
-  margin: 0;
-}
-
-.voice-featured blockquote p {
+.voices blockquote p {
   font-family: var(--font-display);
-  font-size: clamp(1.8rem, 4.5vw, 3.2rem);
-  font-weight: 400;
-  line-height: 1.15;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1.2;
   color: var(--text);
+  max-width: 25ch;
   margin-inline: auto;
 }
 
-.voice-featured cite {
+.voices cite {
   display: block;
-  margin-top: 1.2rem;
+  margin-top: 2rem;
   font-style: normal;
-  font-size: 0.88rem;
-  color: var(--text-muted);
-}
-
-.voice-featured cite span {
-  color: var(--text-dim);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--accent);
 }
 
 .voice-ornament {
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--accent);
-  margin: clamp(2.5rem, 5vw, 4rem) auto;
+  margin-block: 4rem;
+  font-size: 1.5rem;
+  color: var(--line-strong);
 }
 
-.voice-secondary blockquote p {
-  font-family: var(--font-display);
-  font-size: clamp(1.1rem, 2.5vw, 1.6rem);
-  font-weight: 400;
-  line-height: 1.3;
-  color: var(--text-muted);
-  margin-inline: auto;
-  max-width: 36ch;
-}
-
-.voice-secondary cite {
-  display: block;
-  margin-top: 0.8rem;
-  font-style: normal;
-  font-size: 0.82rem;
-  color: var(--text-dim);
-}
-
-.voice-secondary cite span {
-  color: var(--text-dim);
-}
 
 /* ═══════════════════════════════════════════════
-   BOOKING — underline inputs, intimate form
-   Two-column layout: heading left, form right
+   BOOKING
    ═══════════════════════════════════════════════ */
 
 .booking {
-  background: #0b0b0f;
-  padding-block: clamp(4rem, 8vw, 8rem);
+  padding-block: 6rem;
+  background: #080808;
 }
 
 .booking-inner {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: clamp(2rem, 4vw, 4rem);
-  align-items: start;
+  gap: 4rem;
+  align-items: end;
 }
 
 .booking-display {
-  font-family: var(--font-display);
-  font-size: clamp(4rem, 10vw, 8.5rem);
-  font-weight: 400;
-  line-height: 0.85;
-  color: var(--text);
-  letter-spacing: -0.02em;
-}
-
-.booking-subtitle {
-  margin-top: 0.8rem;
+  font-size: clamp(3rem, 10vw, 8rem);
+  line-height: 0.9;
   color: var(--text-dim);
-  font-size: clamp(0.88rem, 1.4vw, 1.05rem);
-  line-height: 1.5;
+  opacity: 0.3;
 }
 
 .booking-form {
-  display: grid;
-  gap: 1.2rem;
+  background: var(--panel);
+  padding: 3rem;
+  border: 1px solid var(--line-soft);
+}
+
+.form-field {
+  margin-bottom: 2rem;
+  position: relative;
 }
 
 .form-field label {
-  display: block;
-  color: var(--text-muted);
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 0.75rem;
   text-transform: uppercase;
-  letter-spacing: 0.17em;
-  font-size: 0.64rem;
-  font-weight: 600;
-  margin-bottom: 0.15rem;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  transition: all 0.2s ease;
+}
+
+.form-field input:focus~label,
+.form-field input:not(:placeholder-shown)~label {
+  top: -1.2rem;
+  color: var(--accent);
+  font-size: 0.65rem;
 }
 
 .form-field input,
 .form-field select {
   width: 100%;
+  background: transparent;
   border: none;
   border-bottom: 1px solid var(--line-soft);
+  padding-block: 0.5rem;
+  color: var(--text);
+  font-size: 1.1rem;
   border-radius: 0;
-  background: transparent;
-  padding: 0.6rem 0;
-  color: inherit;
-  font: inherit;
 }
 
-.form-field input:focus-visible,
-.form-field select:focus-visible {
+.form-field input:focus,
+.form-field select:focus {
   outline: none;
-  border-bottom-color: var(--accent);
+  border-bottom-color: var(--text);
 }
 
-.booking-form .button {
-  width: fit-content;
-  margin-top: 0.6rem;
-}
-
-.booking-confirmation {
-  margin-top: 0.15rem;
-  border: 1px solid var(--line-strong);
-  border-radius: 6px;
-  background: #18150f;
-  color: var(--accent);
-  padding: 0.55rem 0.65rem;
-  font-size: 0.84rem;
-}
 
 /* ═══════════════════════════════════════════════
    FOOTER
    ═══════════════════════════════════════════════ */
 
 .footer {
-  margin-top: 0;
+  padding-block: 4rem;
   border-top: 1px solid var(--line-soft);
-  padding-block: 1.8rem;
+  text-align: center;
 }
 
 .footer-shell {
   display: flex;
-  justify-content: space-between;
-  gap: 1rem;
+  flex-direction: column;
+  gap: 2rem;
   align-items: center;
-}
-
-.footer-shell p {
-  margin-top: 0.45rem;
-  color: var(--text-dim);
-  font-size: 0.84rem;
 }
 
 .footer-links {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 0.8rem;
+  gap: 2rem;
 }
 
 .footer-links a {
+  font-size: 0.75rem;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--text-muted);
-  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
 }
 
-.footer-links a:hover,
-.footer-links a:focus-visible {
-  color: var(--text);
+.footer-links a:hover {
+  color: var(--accent);
 }
+
 
 /* ═══════════════════════════════════════════════
-   RESPONSIVE — tablet & below
+   RESPONSIVE
    ═══════════════════════════════════════════════ */
 
-@media (max-width: 66rem) {
-  .booking-inner {
+@media (max-width: 768px) {
+
+  .manifesto-inner,
+  .booking-inner,
+  .menu-item {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
-  .booking-display {
-    font-size: clamp(3rem, 12vw, 6rem);
-  }
-}
-
-@media (max-width: 52rem) {
-  .header-shell {
-    grid-template-columns: 1fr auto;
-    row-gap: 0.55rem;
-    padding-block: 0.55rem;
-  }
-
-  .nav-desktop {
-    grid-column: 1 / -1;
-    justify-self: start;
-    width: 100%;
-    overflow-x: auto;
-    padding-bottom: 0.18rem;
-    gap: 0.55rem;
-    scrollbar-width: none;
-  }
-
-  .nav-desktop::-webkit-scrollbar {
-    display: none;
-  }
-
-  .nav-desktop a {
-    white-space: nowrap;
-    font-size: 0.65rem;
-  }
-
-  .hero h1 {
-    font-size: clamp(3.2rem, 16vw, 6rem);
-  }
-
-  .gallery-grid {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-    gap: 3px;
-  }
-
-  .gallery-item,
-  .gallery-item-1,
-  .gallery-item-2,
-  .gallery-item-3 {
-    grid-column: 1;
-    grid-row: auto;
-    aspect-ratio: 1.4;
   }
 
   .cellar-triptych {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    border: none;
   }
 
-  .footer-shell,
-  .footer-links {
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
+  .cellar-flight {
+    border: 1px solid var(--line-soft);
+    margin-bottom: 1rem;
   }
-}
 
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation: none !important;
-    transition-duration: 0ms !important;
-    scroll-behavior: auto !important;
+  .nav-desktop {
+    display: none;
+    /* Mobile menu would be needed here, keeping simple for now */
   }
 }
